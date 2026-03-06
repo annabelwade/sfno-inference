@@ -52,6 +52,9 @@ echo $UV_CACHE_DIR # to verify it worked!
 #### `configs/`
 - contains .json config files for different experiments and inference runs.
 
+#### `examples/`
+- contains example notebooks for visualizing specific events and plotting metrics.
+
 ## Running inference
 To run inference, submit the `inference_job_arr.sh` script with a specified experiment number:
 ```
