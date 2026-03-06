@@ -1,4 +1,4 @@
-# Running inference using Earth2Studio
+# Running SFNO inference with Earth2Studio
 
 This folder contains inference scripts for running SFNO forecasts with earth2studio 0.10.0.
 
@@ -7,7 +7,7 @@ This folder contains inference scripts for running SFNO forecasts with earth2stu
 ```
 conda create -n e2s-new python=3.12 -y 
 conda activate e2s-new
-pip install uv_
+pip install uv
 export UV_CACHE_DIR="INSERT_YOUR_PERSONAL_PROJECT_DIRECTORY/uv_cache"
 uv pip install "earth2studio @ git+https://github.com/NVIDIA/earth2studio.git@0.10.0"
 uv pip install "earth2studio[fcn]"
