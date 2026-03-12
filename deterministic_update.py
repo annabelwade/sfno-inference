@@ -51,6 +51,8 @@ def deterministic(
         IO output coordinate system override, by default OrderedDict({})
     device : torch.device, optional
         Device to run inference on, by default None
+    variables_list: list[str] | None, optional
+        List of variable names to subset and save to io. If None, saves all variables. If empty list, saves no variables. By default None.
 
     Returns
     -------
@@ -127,6 +129,9 @@ def deterministic(
             #### Becca Edit - subset data saved to io
             if variables_list is None:
                 io.write(*split_coords(x, coords))
+            elif variables_list == []:
+                # If variables_list is an empty list, skip writing to io
+                pass
             elif variables_list is not None:
                 coords_subset = coords.copy()
                 indices = []
