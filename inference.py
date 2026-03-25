@@ -141,8 +141,7 @@ print(f"----------------------")
 
 # --- LOGGING SETUP: Define log file path and write header if new ---
 # Append task_id to log file to prevent write conflicts
-logs_dir = os.path.join(os.getcwd(),'logs',f'Experiment{str(experiment_number)}')
-log_fp = logs_dir + f"timing_log_{valid_timestep[:10]}_task{task_id+1}.csv"
+log_fp = os.path.join(os.getcwd(),'logs',f'Experiment{str(experiment_number)}',f"timing_log_{valid_timestep[:10]}_task{task_id+1}.csv")
 os.makedirs(results_out_dir, exist_ok=True) # Ensure dir exists for the log
 if not os.path.exists(log_fp):
     with open(log_fp, "w") as f:
