@@ -17,6 +17,9 @@
 # Request 4 tasks (Job Array 1-4)
 #$ -t 1-4
 
+# Explicitly discard SGE system log, because we are redirecting output to a custom log file in the script
+#$ -o /dev/null
+
 # Merge output and error files
 #$ -j y
 
