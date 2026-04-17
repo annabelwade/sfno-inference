@@ -84,6 +84,15 @@ if 'bounding_box' in exp_params:
     # convert the values to be float 
     for key in bounding_box:
         bounding_box[key] = float(bounding_box[key])
+
+####### NEW: Parse Perturbation Config #######
+apply_masking = False
+variables_to_mask = []
+if 'perturbation' in config:
+    perturb_params = config['perturbation']
+    apply_masking = perturb_params.get('apply_masking', False)
+    variables_to_mask = perturb_params.get('variables_to_mask', [])
+###############################################
     
 # Parse Model Parameters
 model_params = config['model_parameters']
@@ -204,6 +213,15 @@ for n_epoch in epochs_subset:
             
             # Prepare Initialization Data
             data_create_fp = f"/INSERT_DIRECTORY_OF_INITIALIZATION_FILES/Initialize_"+inference_name+".nc" 
+
+            ######## NEW CODE FOR USING THE PERTURBATION #########
+            if apply_masking:
+                # Get the filename from init_fp
+                filename = os.path.basename(data_create_fp)
+                filename = filename.replace('.nc', '_perturbedWinds.nc')
+                data_create_fp = os.path.join('/projectnb/eb-general/shared_data/data/processed/FourCastNet_sfno/perturbed_init_files/', filename)
+            ######################################################
+
             if not os.path.exists(data_create_fp):
                 create_initialization_file(start_timestep=start_timestep, valid_timestep=valid_timestep, init_fp=data_create_fp, )
             initial_data = data.DataArrayFile(data_create_fp) 

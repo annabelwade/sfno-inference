@@ -1,0 +1,40 @@
+{
+    "experiment_setup": {
+        "event_type": "atmospheric_river",
+        "valid_timestep": "2022-12-27T00:00:00",
+        "leadtimes_days": [5, 7],
+        "variables_to_save": ["tcwv", "u700", "v700", "z500", "q700"],
+        "ema": false,
+        "compute_ivt": true,
+        "bounding_box": {
+            "latitude_min": "25.0",
+            "latitude_max": "56.2",
+            "longitude_min": "220.0",
+            "longitude_max": "252.8"
+        }
+    },
+    "perturbation": {
+        "apply_masking": true,
+    "variables_to_mask": [
+        "u10m",
+        "v10m",
+        "u100m",
+        "v100m",
+        "u700",
+        "u850",
+        "u925",
+        "u1000",
+        "v700",
+        "v850",
+        "v925",
+        "v1000"
+    ]
+},
+    "model_parameters": {
+        "fine_tuning_start_epoch": 71,
+        "epochs_to_run": "odds"
+    },
+    "paths": {
+        "base_output_dir": "/insert-your-project-directory/inference_runs/perturb_runs"
+    }
+}
