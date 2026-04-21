@@ -99,8 +99,20 @@ def get_forecast_and_truth_data(experiment_number, ckpt_num, leadtime, var, boun
     ds_cropped = crop_spatial_bounds(ds, bounding_box)
     forecast_data = ds_cropped[var].isel(valid_time=valid_time_ind)
 
-    truth_fp = f"DEFINE_INFERENCE_RUN_DIRECTORY/init_files/Initialize_{inference_name}.nc"
-    truth_ds = xr.open_dataset(truth_fp)
+    data_create_fp = f"/INSERT_DIRECTORY_OF_YOUR_REGULAR_NONPERTURBED_INITIALIZATION_FILES/Initialize_"+inference_name+".nc" 
+
+    apply_masking=False
+    if 'perturbation' in config:
+        perturb_params = config['perturbation']
+        apply_masking = perturb_params.get('apply_masking', False)
+
+    if apply_masking:
+        # Get the filename from init_fp
+        filename = os.path.basename(data_create_fp)
+        filename = filename.replace('.nc', '_perturbedWinds.nc')
+        data_create_fp = os.path.join('/projectnb/eb-general/shared_data/data/processed/FourCastNet_sfno/perturbed_init_files/', filename)
+
+    truth_ds = xr.open_dataset(data_create_fp)
     truth_ds = truth_ds.isel(time=1).sel(variable=var)
     truth_ds_cropped = crop_spatial_bounds(truth_ds, bounding_box)
     truth_ds_cropped = truth_ds_cropped.to_dataarray().squeeze()
