@@ -72,19 +72,29 @@ def setup_figure_layout(num_plots):
         
     return fig, ax_list, ax
 
-def get_forecast_and_truth_data(experiment_number, ckpt_num, leadtime, var, bounding_box, 
-            valid_timestep_str="2022_12_27T00"):
+def get_forecast_and_truth_data(experiment_number, ckpt_num, leadtime, var, bounding_box,
+            valid_timestep_str="2022-12-27T00"):
     """Helper to load forecast and truth data for a given checkpoint."""
     valid_datetime = datetime.fromisoformat(valid_timestep_str)
-    start_datetime = valid_datetime - timedelta(days=leadtime) #datetime.fromisoformat(init_timestep_str)
+    start_datetime = valid_datetime - timedelta(days=leadtime)
     inference_name = start_datetime.strftime("%Y_%m_%dT%H")+'_nsteps'+str(leadtime*4)
 
     if experiment_number == 1:
         valid_time_ind=2  # will be retiring this experiment soon and won't need this check
     else:
-        valid_time_ind=0 
+        valid_time_ind=0
 
-    output_fp = f"DEFINE_INFERENCE_RUN_DIRECTORY/Experiment{experiment_number}/{valid_timestep_str.replace('-', '_')[:10]}/Checkpoint{ckpt_num}_{inference_name}.nc"
+    # Load experiment config to determine base_output_dir
+    configs_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'configs')
+    config_fp = os.path.join(configs_dir, f'exp{experiment_number}.json')
+    if os.path.exists(config_fp):
+        with open(config_fp, 'r') as f:
+            config = json.load(f)
+        base_output_dir = config['paths']['base_output_dir']
+    else:
+        base_output_dir = "INSERT_YOUR_BASE_OUTPUT_DIR_HERE" # The default dir if config not found
+
+    output_fp = f"{base_output_dir}/Experiment{experiment_number}/{valid_timestep_str.replace('-', '_')[:10]}/Checkpoint{ckpt_num}_{inference_name}.nc"
     ds = xr.open_dataset(output_fp)
     ds_cropped = crop_spatial_bounds(ds, bounding_box)
     forecast_data = ds_cropped[var].isel(valid_time=valid_time_ind)
